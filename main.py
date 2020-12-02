@@ -47,13 +47,14 @@ from class_43_tokenize import TokenizeData
 from class_44_label import LabelProcess
 from class_51_eda import EdaData
 from class_68_splist import SplitData
-from class_81_model import BuildModels
+from class_81_neuralnetwork import BuildModels
 from class_89_complitfit import CompileFit
 
 def main():
     """
     We use this function to call process one by one.
     """
+    # ***********************Preprossing******************************
     pre = PreprocessData()
     df_q_train_raw, X_question_df, X_answer_df, y_question_df, y_answer_df = pre.import_data("03_data/02_train.csv")
     # df_test_raw, X_q_test_df, X_a_test_df, y_q_test_df, y_a_test_df = pre.import_data("03_data/03_test.csv")
@@ -64,9 +65,9 @@ def main():
     #     q_test_cleaned_df = clean.clean_process(X_q_test_df, column_1 ='question')
     #     a_test_cleaned_df = clean.clean_process(X_a_test_df, column_1='answer')
 
-    eda_class = EdaData()
-    # eda_class.question_plot(y_question_df)
-    # question_padded have shape (6079,100) can be used in fewer embedding
+
+
+
 
     token_class = TokenizeData()
     # do not use '|', insteand we can use comma to next line and bracket to state they are together
@@ -82,7 +83,11 @@ def main():
     #     q_test_padded, q_test_cleaned_df = eda_class.tokenize_plot(q_test_cleaned_df, a_test_cleaned_df)
     #     # get question label
     #     y_label_test_df = eda_class.label_feature(y_q_test_df)
+    # ********************Preprossing******************************
 
+    eda_class = EdaData()
+    eda_class.question_plot(y_question_df)
+    # question_padded have shape (6079,100) can be used in fewer embedding
 
 
     split_class = SplitData()
