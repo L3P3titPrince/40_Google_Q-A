@@ -22,8 +22,8 @@ Every node is a individual class and main() will import them by file with inside
     </li>
     <li><a href="#4.Word2Vect">Word2Vect</a>
     <ul>
-        <del><a href="#TFIDF">4.1 TFIDF</a></del>
-        <li><a href="#Embedding">4.2 Embedding</a></li>
+        <li><del><a href="#TFIDF">4.1 TFIDF</a></del></li>
+        <li><del><a href="#Embedding">4.2 Embedding</a></del></li>
         <li><a href="#Glove Vector">4.3 Glove Vector</a></li>
         <li><a href="#BERT Vector">4.4 BERT Vector</a></li> 
         <li><a href="#Split Data">4.5 Split Data</a></li> 
