@@ -13,7 +13,7 @@ class GloveVect(object):
         self.PATH = r"D:\Downloads\glove.6B\glove.6B.50d.txt"
         self.EMBEDDING_DIM = 50
 
-    def glove_vect(self, word_index, df):
+    def glove_vect(self, word_index):
         """
         Argus:
         ------
@@ -60,38 +60,3 @@ class GloveVect(object):
         print("*" * 40, "End glove_vect() with {} seconds".format(cost_time), "*" * 40, end='\n\n')
         return embedding_matrix, embedding_index
 
-def glove_embedding(word_index, padded, embedding_matrix):
-        """
-        Typically method is transform word vector first and find cooresponding word in a sentcen, using word vector to concatenate setence vector
-        But i can't find a tokenize() function to using seperate dictionary to complete tokenziation process
-        Embedding can do that. When you set trainale=False, the weights, embedding_matrix, will be change and mapping word vector by word
-
-        Argus:
-        -----
-        word_index:dictionary
-            provide a index <-> word mapping table
-
-        padded:array
-            (number of example, MAX_SEQ_LEN)
-
-        embedding_matrix:dictionary
-            provide a word <-> word vector mapping table
-        """
-        print("*" * 50, "Start embedding process", "*" * 50)
-        start_time = time.time()
-        # max sequence/sentence length is 100
-        MAX_SEQ_LEN = 500
-        EMBEDDING_DIM = 50
-        sequence_input = Input(shape=(MAX_SEQ_LEN,), dtype='int32')
-        embedding_layer = Embedding(len(word_index) + 1,
-                                    EMBEDDING_DIM,
-                                    weights=[embedding_matrix],
-                                    input_length=MAX_SEQ_LEN,
-                                    trainable=False)
-        # (number of sample, MAX_SEQ_LEN, EMBEDING_DIM)
-        output = embedding_layer(padded)
-
-        cost_time = round((time.time() - start_time), 4)
-        print("*" * 40, "End embedding() with {} seconds".format(cost_time), "*" * 40, end='\n\n')
-
-        return output, embedding_layer

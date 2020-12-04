@@ -6,11 +6,13 @@ import re
 # using copy to duplicate
 import copy
 # recording each step runing time
-import time
+from time import time
 # corpus will be string format
 import string
 # the easiest way to get text is using bs4 to get only text
 from bs4 import BeautifulSoup
+# get process bar
+from tqdm import tqdm
 
 class CleanData(object):
     def __init__(self):
@@ -27,7 +29,8 @@ class CleanData(object):
         2.remove special puncuation and symbol
         4.remove string puncuation
         5.only reserve words
-        6.remove stop words(if we eliminate most frequcen word, do we still this? and did this affect LSTM?) so i put a switch
+        6.remove stop words(if we eliminate most frequcen word, do we still this?
+        and did this affect LSTM?) so i put a switch
 
         Argus:
         -----
@@ -45,7 +48,7 @@ class CleanData(object):
             Because we use apply(lambda) to process each cell in DataFrame, so output is still that DataFrame
         """
         print("*" * 50, "Start Clean data", "*" * 50)
-        start_time = time.time()
+        start_time = time()
         # original datatype is serise, first transfrom to string and get lower() case text
         corpus = df[column_1].str.lower()
 
@@ -89,7 +92,7 @@ class CleanData(object):
         #         corpus_8 = pd.Series(np.array(corpus))
         df['cleaned'] = pd.Series(np.array(corpus))
 
-        cost_time = round((time.time() - start_time), 4)
+        cost_time = round((time() - start_time), 4)
         print("*" * 40, "End clean_data() with {} second".format(cost_time), "*" * 40, end='\n\n')
 
         return df

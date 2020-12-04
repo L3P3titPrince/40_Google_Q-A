@@ -39,7 +39,7 @@ Every node is a individual class and main() will import them by file with inside
     </ul>
     </li>
     <li><a href="#7.Main Function">Main Function</a></li>
-    <li><a href="#8.Analysis">Main Function</a></li>
+    <li><a href="#8.Analysis">Analysis</a></li>
     <li><a href="#10.Test Code">Unused Code</a></li>
 </ol>
 

@@ -11,6 +11,8 @@ import seaborn as sns
 class EdaData(object):
     """
     explorer this data structure
+    The parameters need to be decided by eda:
+        self.MAX_WORD = ???
     """
 
     def __init__(self):
@@ -40,6 +42,8 @@ class EdaData(object):
             ax.set_xlim([0, 1])
             ax.set_ylim([0, 6079])
         plt.tight_layout()
+        # plt.show() will release memory, so we need save file before show()
+        plt.savefig('04_images/10_question_plot.png', dpi=150, format='png')
         plt.show()
         plt.close()
 
@@ -48,7 +52,7 @@ class EdaData(object):
         Due to different column number, we need to
         """
         #
-        fig, axes = plt.subplots(7, 3, figsize=(18, 15))
+        fig, axes = plt.subplots(3, 3, figsize=(18, 15))
         axes = axes.ravel()
         bins = np.linspace(0, 1, 20)
 
@@ -59,10 +63,11 @@ class EdaData(object):
             ax.set_xlim([0, 1])
             ax.set_ylim([0, 6079])
         plt.tight_layout()
+        plt.savefig('04_images/11_answer_plot.png', dpi = 250, format='png')
         plt.show()
         plt.close()
 
-    def eda_length(df):
+    def eda_length(self, df):
         """
         use statisc and plot to determine hyperparameters, such as MAX_SEQ_LEN, TOP_WORDS
         Arugs:

@@ -6,7 +6,7 @@ from tensorflow.keras.utils import to_categorical
 
 class LabelProcess(object):
     """
-
+    Originally, we use tartget numerial as our label, which are
     """
 
     def __init__(self, y_question_df, y_answer_df):
@@ -18,20 +18,57 @@ class LabelProcess(object):
         In future, i will use arguritem to filter column. For now, i do it manually
         As i test use pure numerical algorithem to calcualte
 
+        For labels of question, we ignore the following parts
+        since the results of these labels are almost coming to one category (1 or 0).
+        For examples:
+        question_conversational
+        question_not_really_a_question
+        question_tpye_compare
+
+        They all have obviously meanings so that they will have inefficient evaluation about questions.
+        Therefore, we are looking forward to finding some labels which have more balanced results.
+        We choose several labels as follows.
+
+        question_asker_intent_understanding:
+        This label represents the level that people can understand the questions’intent.
+
+        question_expect_short_answer:
+        This label represents the level that people expect the short answers.
+
+        question_has_commonly_accepted_answer:
+        This label represents the level that the question has a commonly accepted answer.
+
+        question_interestingness_others:
+        This label represents the interestingness of people expect asker.
+
+        question_interestingness_self:
+        This label represents the interestingness of asker himself or herself.
+
+        question_well_written:
+        This label represents the level that the question can be well written.
+
+        Not used 'question_body_critical'
+
         """
-        # first try these labels
+        # first try these labels, these labels are distribute average and easy for interpretation
         feature_col_q = ['question_asker_intent_understanding',
-                         'question_body_critical',
                          'question_expect_short_answer',
-                         'question_interestingness_others'
+                         'question_has_commonly_accepted_answer',
+                         'question_interestingness_others',
+                         'question_interestingness_self',
+                         'question_well_written'
                          ]
+        # extract the dataframe of these columns
         y_q_label_df = self.y_question_df[feature_col_q]
 
         # extract the answer label features
-        feature_col_a = ['answer_type_instructions']
+        feature_col_a = ['answer_type_instructions',
+                         'answer_satisfaction',
+                         'answer_type_reason_explanation'
+                         ]
         y_a_label_df = self.y_answer_df[feature_col_a]
 
-        return y_q_label_df, y_a_label_df
+        return y_q_label_df, y_a_label_df, feature_col_q, feature_col_a
 
     def auto_classify(self):
         """
@@ -81,6 +118,14 @@ class LabelProcess(object):
         assert np.sum(categorical, axis=1).sum() == len(label_col)
         #         (unique, counts) = np.unique(test_13, return_counts=True)
         return categorical
+
+    # def classify(self):
+    #     """
+    #
+    #     :return:
+    #     """
+
+
 
         """
         # convert input dimension into np.array int format
