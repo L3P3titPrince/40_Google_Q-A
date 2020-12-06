@@ -17,15 +17,17 @@ class MultiEmbedding(HyperParameters):
 
     """
 
-    def __init__self(self):
+
+    def __init__(self):
         """
         inhereit from HyperParameters Class
         :return:
         """
         # super(MultiEmbedding,self).__init__()
-        pass
+        HyperParameters.__init__(self)
 
-    def glove_embedding(self, word_index, padded, embedding_matrix):
+
+    def glove_embedding(self, word_index, padded, embedding_matrix, part='q'):
         """
         Typically method is transform word vector first and find cooresponding word in a sentcen, using word vector to concatenate setence vector
         But i can't find a tokenize() function to using seperate dictionary to complete tokenziation process
@@ -42,24 +44,34 @@ class MultiEmbedding(HyperParameters):
         embedding_matrix:dictionary
             provide a word <-> word vector mapping table
         """
-        print("*" * 50, "Start embedding process", "*" * 50)
+        print("*" * 50, "Start Glove embedding process", "*" * 50)
         start_time = time()
-        # max sequence/sentence length is 100
-        MAX_SEQ_LEN = 500
-        EMBEDDING_DIM = 50
-        sequence_input = Input(shape=(MAX_SEQ_LEN,), dtype='int32')
-        embedding_layer = Embedding(len(word_index) + 1,
-                                    EMBEDDING_DIM,
+
+
+        MAX_SEQ_LEN = None
+        if part == 'q':
+            MAX_SEQ_LEN = self.MAX_Q_SEQ_LEN
+        elif part == 'a':
+            MAX_SEQ_LEN = self.MAX_A_SEQ_LEN
+        else:
+            print(f"Please indicate you want embedding question part or answer part")
+
+
+        input_layer = Input(shape=(MAX_SEQ_LEN,), dtype='int32')
+        embedding_layer = Embedding(input_dim = len(word_index) + 1,
+                                    output_dim = self.EMBEDDING_DIM,
                                     weights=[embedding_matrix],
                                     input_length=MAX_SEQ_LEN,
-                                    trainable=False)
+                                    trainable=False)(input_layer)
         # (number of sample, MAX_SEQ_LEN, EMBEDING_DIM)
-        output = embedding_layer(padded)
+        model = Model(inputs=input_layer, outputs=embedding_layer)
+        model.compile('rmsprop', 'mse')
+        output_array = model.predict(padded)
 
         cost_time = round((time() - start_time), 4)
-        print("*" * 40, "End embedding() with {} seconds".format(cost_time), "*" * 40, end='\n\n')
+        print("*" * 40, "End Glove embedding() with {} seconds".format(cost_time), "*" * 40, end='\n\n')
 
-        return output, embedding_layer
+        return output_array, embedding_layer
 
     def random_embedding(self, word_index, padded, part='q'):
         """
@@ -85,6 +97,9 @@ class MultiEmbedding(HyperParameters):
         embedding_layer:Tensor
 
         """
+        print("*" * 50, "Start Random embedding process", "*" * 50)
+        start_time = time()
+
         # global MAX_SEQ_LEN
         if part == 'q':
             MAX_SEQ_LEN = self.MAX_Q_SEQ_LEN
@@ -104,5 +119,9 @@ class MultiEmbedding(HyperParameters):
         model = Model(inputs = input_layer, outputs = embedding_layer)
         model.compile('rmsprop', 'mse')
         output_array = model.predict(padded)
+
+        cost_time = round((time() - start_time), 4)
+        print("*" * 40, "End Random embedding() with {} seconds".format(cost_time), "*" * 40, end='\n\n')
+
 
         return output_array, embedding_layer

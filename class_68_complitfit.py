@@ -1,4 +1,4 @@
-import time
+from time import time
 # need specify lr in optiizer
 from tensorflow.keras import optimizers
 
@@ -10,7 +10,7 @@ class CompileFit(object):
     def compile_fit(self, model_input, X_train, X_val, y_train, y_val, loss_fun, epoch_num=3):
         """
         """
-        start_time = time.time()
+        start_time = time()
         print("*" * 40, "Start {} Processing".format(model_input._name), "*" * 40)
 
         model = model_input
@@ -55,6 +55,6 @@ class CompileFit(object):
         #     # plt.ylabel(str(dic[i]))
         #     plt.show()
 
-        cost_time = round((time.time() - start_time), 4)
+        cost_time = round((time() - start_time), 4)
         print("*" * 40, "End {} with {} seconds".format(model_input._name, cost_time), "*" * 40, end='\n\n')
         return history, model
