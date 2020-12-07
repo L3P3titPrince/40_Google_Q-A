@@ -32,7 +32,7 @@ class SaveModelHistory(object):
         # concatanate old and new dataframe into one
         self.history_classify_df = pd.concat(frames)
         # write in tof file
-        self.history_classify_df.to_csv("05_files/10_hisotry_classify_df.csv")
+        self.history_classify_df.to_csv(f"05_files/11_hisotry_classify_{str_input}_df.csv")
 
         return self.history_classify_df
 

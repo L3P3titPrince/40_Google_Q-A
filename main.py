@@ -4,11 +4,12 @@ from class_33_clean_data import CleanData
 from class_34_tokenize import TokenizeData
 from class_35_label import LabelProcess
 from class_36_eda import EdaData
-from class_42_embeding import MultiEmbedding
+from class_45_embeding import MultiEmbedding
 from class_43_glove import GloveVect
-from class_45_splist import SplitData
+from class_45_splist_complie import SplitAndCompile
 from class_61_neuralnetwork import BuildModels
-from class_65_complitfit import CompileFit
+from class_62_cnn import CNNModel
+from class_63_rnn import RNNModel
 from class_69_save import SaveModelHistory
 
 def main():
@@ -39,7 +40,7 @@ def main():
     # do not use '|', insteand we can use comma to next line and bracket to state they are together
     # input q_train_cleaned_dataframe and output still dataframe with new colunm[padded]
     # question_train part_padded  = (6078, 400)
-    (q_train_padded, q_train_cleaned_df, a_train_padded, q_word_index,
+    (q_train_padded, q_train_cleaned_df, a_train_padded, word_index,
      q_index_word) = token_class.tokenize_plot(q_train_cleaned_df, a_train_cleaned_df)
 
 
@@ -47,58 +48,82 @@ def main():
     #***********From this part, we only consider classification version************
     # y_q_train_df
     label_class = LabelProcess(y_q_train_df, y_a_train_df)
-    y_q_label_df, y_a_label_df, feature_col_q, feature_col_a = label_class.num_label()
-    y_q_table_0 = label_class.manual_calssify(y_q_label_df.iloc[:, 0])
-    # y_a_label_df = label_class.manual_calssify(y_answer_df.iloc[:, 0])
+    y_q_label_df, y_a_label_df, q_feature_col, a_feature_col = label_class.num_label()
+    y_q_classify_list, y_q_classify_dict, y_a_classify_list, y_a_classify_dict = label_class.classify_label()
 
-    #     q_test_padded, q_test_cleaned_df = eda_class.tokenize_plot(q_test_cleaned_df, a_test_cleaned_df)
-    #     # get question label
-    #     y_label_test_df = eda_class.label_feature(y_q_test_df)
 
     # ********************EDA******************************
     # eda_class = EdaData()
     # eda_class.question_plot(y_question_df)
     # eda_class.answer_plot(y_answer_df)
-    # question_padded have shape (6079,100) can be used in fewer embedding
+    # q_train_padded have shape (6079,100) can be used in fewer embedding
 
-    # #*********************Embedding****THIS PART NOT WORKING*******************
-    # emb_class = MultiEmbedding()
-    # # first transform question_padded
-    # # output, embedding_layer = emb_class.embedding(word_index, question_padded, embedding_matrix)
+    # #*********************Embedding****THIS PART ONLY WORD AS API*******************
+
     glove_class = GloveVect()
-    embedding_matrix, embedding_index = glove_class.glove_vect(q_word_index)
-
-
-    split_class = SplitData()
-    # question part and answer part will be seperately split
-    # If postfix is number, this label is one-hot for calssify
-    X_q_train, X_q_val, y_q_train, y_q_val = split_class.split_data(q_train_padded, y_q_table_0, test_size=0.2)
-    # if postfix is df, this label is numerical
-    X_a_train, X_a_val, y_a_train, y_a_val = split_class.split_data(a_train_padded, y_a_label_df, test_size=0.2)
+    embedding_matrix, embedding_index = glove_class.glove_vect(word_index)
+    embed_class = MultiEmbedding()
+    #first transform q_train_padded
+    q_glove_output_array, q_glove_embedding_layer= embed_class.glove_embedding(word_index,
+                                                                               q_train_padded,
+                                                                               embedding_matrix,
+                                                                               part = 'q')
+    a_glove_output_array, a_glove_embedding_layer= embed_class.glove_embedding(word_index,
+                                                                               a_train_padded,
+                                                                               embedding_matrix,
+                                                                               part = 'a')
+    q_random_output, q_random_embedding_layer = embed_class.random_embedding(word_index,
+                                                                             q_train_padded,
+                                                                              part = 'q')
+    a_random_output, a_random_embedding_layer = embed_class.random_embedding(word_index,
+                                                                             a_train_padded,
+                                                                             part = 'a')
 
 
     #******************Models*******************************
 
     model_class = BuildModels()
-    compile_class = CompileFit()
+    compile_class = SplitAndCompile()
     save_class = SaveModelHistory()
     #***************Random Embedding Normal Neural Network****************
-    # nn_model = model_class.nn_model(q_word_index, part = 'q')
+    # nn_model = model_class.nn_model(word_index, part = 'q')
     #     history, model_2 = compile_fit(nn_model(word_index), X_q_train, X_q_val, y_q_train, y_q_val, loss_fun = 'mse', epoch_num=1)
-    # history_a, model_a = compile_class.compile_fit(nn_model,
+    # history, model = compile_class.compile_fit(nn_model,
     #                                  X_q_train, X_q_val, y_q_train, y_q_val, loss_fun='categorical_crossentropy',
     #                                  epoch_num=3)
 
-    # ***************Pretrain Glove Normal Neural Network****************(each model should have its own model part)
-    pretrain_nn = model_class.nn_model(q_word_index, part='q', pretrain_matrix=embedding_matrix)
-    history_a, model_a = compile_class.compile_fit(pretrain_nn,
-                                                   X_q_train, X_q_val, y_q_train, y_q_val,
-                                                   loss_fun='categorical_crossentropy',
-                                                   epoch_num=3)
-    history_classify_df = save_class.write_csv(history_a, model_a, str_input='Question_Glove_NN_20')
+    # # ***************Pretrain Glove Normal Neural Network****************(each model should have its own model part)
+    # pretrain_nn = model_class.nn_model(word_index, part='q', type='classify', pretrain_matrix=embedding_matrix)
+    # history, model = compile_class.compile_fit(pretrain_nn,
+    #                                                X_q_train, X_q_val, y_q_train, y_q_val,
+    #                                                loss_fun='categorical_crossentropy',
+    #                                                epoch_num=3)
+    # history_classify_df = save_class.write_csv(history, model, str_input='Question_Glove_NN_20')
 
+    # ***************Question Pretrain Gloave Normal CNN Classify*******************
+    # cnn_class= CNNModel()
+    # cnn_model_1 = cnn_class.normal_cnn(word_index, pretrain_matrix=embedding_matrix)
+    # history, model = compile_class.compile_fit(cnn_model_1,
+    #                                            X_q_train, X_q_val, y_q_train, y_q_val,
+    #                                            loss_fun='categorical_crossentropy',
+    #                                            epoch_num=10)
+    # history_classify_df = save_class.write_csv(history, model, str_input='Question_Glove_Normal_CNN_10')
 
+    # cnn_class = CNNModel()
+    # cnn_model_2 = cnn_class.n_gram_cnn(word_index, pretrain_matrix=embedding_matrix)
+    # history, model = compile_class.compile_fit(cnn_model_2, q_train_padded, a_train_padded, y_q_label_df, y_a_label_df,
+    #                                            y_q_classify_list, y_q_classify_dict,
+    #                                            y_a_classify_list, y_a_classify_dict,
+    #                                            epoch_num=3)
+    # history_classify_df = save_class.write_csv(history, model, str_input='Question_Glove_NormalCNN_10')
 
+    rnn_class = RNNModel()
+    lstm_model_1 = rnn_class.lstm(word_index, pretrain_matrix=embedding_matrix)
+    history, model = compile_class.compile_fit(lstm_model_1, q_train_padded, a_train_padded, y_q_label_df, y_a_label_df,
+                                               y_q_classify_list, y_q_classify_dict,
+                                               y_a_classify_list, y_a_classify_dict,
+                                               epoch_num=5)
+    history_classify_df = save_class.write_csv(history, model, str_input='Question_Glove_LSTM_5')
 
     #************************test part*****************************
     # 1.tokenize
@@ -109,18 +134,18 @@ def main():
 
 
     return (df_train_raw, X_q_train_df, X_a_train_df, y_q_train_df, y_a_train_df, a_train_cleaned_df,
-            q_train_padded, q_train_cleaned_df, a_train_padded, q_word_index, q_index_word,
-            y_q_label_df, y_a_label_df, feature_col_q, feature_col_a, y_q_table_0,
-            X_q_train, X_q_val, y_q_train, y_q_val,
-            history_a, model_a)
+            q_train_padded, q_train_cleaned_df, a_train_padded, word_index, q_index_word,
+            y_q_label_df, y_a_label_df, q_feature_col, a_feature_col,
+            y_q_classify_list, y_q_classify_dict, y_a_classify_list, y_a_classify_dict,
+            history, model)
 
 
 if __name__=="__main__":
     """
     """
     (df_train_raw, X_q_train_df, X_a_train_df, y_q_train_df, y_a_train_df, a_train_cleaned_df,
-     q_train_padded, q_train_cleaned_df, a_train_padded, q_word_index, q_index_word,
-     y_q_label_df, y_a_label_df, feature_col_q, feature_col_a, y_q_table_0,
-     X_q_train, X_q_val, y_q_train, y_q_val,
-     history_a, model_a)= main()
+     q_train_padded, q_train_cleaned_df, a_train_padded, word_index, q_index_word,
+     y_q_label_df, y_a_label_df, q_feature_col, a_feature_col,
+     y_q_classify_list, y_q_classify_dict, y_a_classify_list, y_a_classify_dict,
+     history, model)= main()
     print("over")

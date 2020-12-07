@@ -1,17 +1,16 @@
 import numpy as np
-import time
-
+from time import time
 # see the loop progress
 from tqdm import tqdm
+# use hyperparameters
+from class_31_hyperparameters import HyperParameters
 
-
-class GloveVect(object):
+class GloveVect(HyperParameters):
     def __init__(self):
         """
         All the hyperparameters need initialize in this section
         """
-        self.PATH = r"D:\Downloads\glove.6B\glove.6B.50d.txt"
-        self.EMBEDDING_DIM = 50
+        HyperParameters.__init__(self)
 
     def glove_vect(self, word_index):
         """
@@ -25,7 +24,7 @@ class GloveVect(object):
         --------
         """
         print("*" * 50, "Start glove_vect() process", "*" * 50)
-        start_time = time.time()
+        start_time = time()
 
         # key = words;  values = word vector
         embedding_index = {}
@@ -43,7 +42,7 @@ class GloveVect(object):
         f.close()
 
         # this is depended on which GLOVE was choosed
-        self.EMBEDDING_DIM = 50
+        # self.EMBEDDING_DIM = 50
         # create a empty matrix to filled in glove, this matrix will be a 27015(27014+1) by 50 dimension matrix
         embedding_matrix = np.zeros((len(word_index) + 1, self.EMBEDDING_DIM))
         # take the key=word and value=i to iterate
@@ -56,7 +55,7 @@ class GloveVect(object):
                 # words not found in embedding index will be all-zeros.
                 embedding_matrix[i] = embedding_vector
 
-        cost_time = round((time.time() - start_time), 4)
+        cost_time = round((time() - start_time), 4)
         print("*" * 40, "End glove_vect() with {} seconds".format(cost_time), "*" * 40, end='\n\n')
         return embedding_matrix, embedding_index
 

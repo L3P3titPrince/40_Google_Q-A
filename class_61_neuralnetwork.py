@@ -45,16 +45,23 @@ class BuildModels(HyperParameters):
         """
 
         # we use this way to decide recall which hyperparameters
+        MAX_SEQ_LEN = None
+        OUTPUT_UNIT = None
+        OUTPUT_ACT = None
         if part == 'q':
             MAX_SEQ_LEN = self.MAX_Q_SEQ_LEN
+            OUTPUT_UNIT = self.Q_OUTPUT_UNIT
         elif part == 'a':
             MAX_SEQ_LEN = self.MAX_A_SEQ_LEN
+            OUTPUT_UNIT = self.A_OUTPUT_UNIT
         else:
             print(f"Please indicate you want embedding question part or answer part")
-        if type == 'num':
-            output_layer = Dense(units=1)
-        elif type == 'classify':
-            output_layer = Dense(units=10, activation='softmax')
+
+        if self.TYPE == 'num':
+            OUTPUT_ACT = 'linear'
+        elif self.TYPE == 'classify':
+            OUTPUT_UNIT = 10
+            OUTPUT_ACT = 'softmax'
 
         model = None
         # input layer is fix, but embed_layer will change according to custom arguments
@@ -77,38 +84,41 @@ class BuildModels(HyperParameters):
                                       )(input_layer_1)
         pooling_layer_3 = GlobalAveragePooling1D()(embed_layer_2)
         dense_layer_4 = Dense(units=32, activation='relu')(pooling_layer_3)
-        output_layer_5 = Dense(units=10, activation='softmax')(dense_layer_4)
+        output_layer_5 = Dense(units=OUTPUT_UNIT, activation=OUTPUT_ACT)(dense_layer_4)
         model = Model(inputs=input_layer_1, outputs=output_layer_5, name='nn_model')
         model.summary()
         return model
 
 
 
-    def test_model(self, X_train, y_train, embedding_layer, part='q'):
-        """
-
-        :return:
-        """
-        # we use this way to decide recall which hyperparameters
-        # global MAX_SEQ_LEN
-        if part == 'q':
-            MAX_SEQ_LEN = self.MAX_Q_SEQ_LEN
-        elif part == 'a':
-            MAX_SEQ_LEN = self.MAX_A_SEQ_LEN
-        else:
-            print(f"Please indicate you want embedding question part or answer part")
-        input_layer_1 = Input(shape=(1000, 100,))
-        pooling_layer_3 = GlobalAveragePooling1D()(input_layer_1)
-        dense_layer_4 = Dense(units=32, activation='relu')(pooling_layer_3)
-        output_layer_5 = Dense(units=10, activation='softmax')(dense_layer_4)
-        model = Model(inputs=input_layer_1, outputs=output_layer_5, name='nn_model')
-        model.summary()
-
-        model = Model(pooling_layer_3, output_layer_5)
-        # model.compile(loss='categorical_crossentropy',
-        #               optimizer='rmsprop',
-        #               metrics=['acc'])
-        # model.fit(X_train, y_train, validation_data=(x_val, y_val),
-        #           epochs=2, batch_size=128)
-
-        return model
+    # def test_model(self, X_train, y_train, embedding_layer, part='q'):
+    #     """
+    #
+    #     :return:
+    #     """
+    #     # we use this way to decide recall which hyperparameters
+    #     # global MAX_SEQ_LEN
+    #     if part == 'q':
+    #         MAX_SEQ_LEN = self.MAX_Q_SEQ_LEN
+    #         OUTPUT_UNIT = self.Q_OUTPUT_UNIT
+    #     elif part == 'a':
+    #         MAX_SEQ_LEN = self.MAX_A_SEQ_LEN
+    #         OUTPUT_UNIT = self.A_OUTPUT_UNIT
+    #     else:
+    #         print(f"Please indicate you want embedding question part or answer part")
+    #
+    #     input_layer_1 = Input(shape=(1000, 100,))
+    #     pooling_layer_3 = GlobalAveragePooling1D()(input_layer_1)
+    #     dense_layer_4 = Dense(units=32, activation='relu')(pooling_layer_3)
+    #     output_layer_5 = Dense(units=10, activation='softmax')(dense_layer_4)
+    #     model = Model(inputs=input_layer_1, outputs=output_layer_5, name='nn_model')
+    #     model.summary()
+    #
+    #     model = Model(pooling_layer_3, output_layer_5)
+    #     # model.compile(loss='categorical_crossentropy',
+    #     #               optimizer='rmsprop',
+    #     #               metrics=['acc'])
+    #     # model.fit(X_train, y_train, validation_data=(x_val, y_val),
+    #     #           epochs=2, batch_size=128)
+    #
+    #     return model

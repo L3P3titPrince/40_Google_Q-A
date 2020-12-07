@@ -51,7 +51,7 @@ class LabelProcess(object):
 
         """
         # first try these labels, these labels are distribute average and easy for interpretation
-        feature_col_q = ['question_asker_intent_understanding',
+        self.q_feature_col = ['question_asker_intent_understanding',
                          'question_expect_short_answer',
                          'question_has_commonly_accepted_answer',
                          'question_interestingness_others',
@@ -59,16 +59,16 @@ class LabelProcess(object):
                          'question_well_written'
                          ]
         # extract the dataframe of these columns
-        y_q_label_df = self.y_question_df[feature_col_q]
+        self.y_q_label_df = self.y_question_df[self.q_feature_col]
 
         # extract the answer label features
-        feature_col_a = ['answer_type_instructions',
+        self.a_feature_col = ['answer_type_instructions',
                          'answer_satisfaction',
                          'answer_type_reason_explanation'
                          ]
-        y_a_label_df = self.y_answer_df[feature_col_a]
+        self.y_a_label_df = self.y_answer_df[self.a_feature_col]
 
-        return y_q_label_df, y_a_label_df, feature_col_q, feature_col_a
+        return self.y_q_label_df, self.y_a_label_df, self.q_feature_col, self.a_feature_col
 
     def auto_classify(self):
         """
@@ -119,11 +119,37 @@ class LabelProcess(object):
         #         (unique, counts) = np.unique(test_13, return_counts=True)
         return categorical
 
-    # def classify(self):
-    #     """
-    #
-    #     :return:
-    #     """
+    def classify_label(self):
+        """
+        Use this function to transform each classify column result into list
+
+        :return:
+        """
+        # we need iterate each
+        y_q_classify_list = []
+        y_q_classify_dict = {}
+        for idx, col in enumerate(self.q_feature_col):
+            # for each column, we transfrom them into one-hot calssification columns
+            y_q_array = self.manual_calssify(self.y_q_label_df.iloc[:, idx])
+            # store them into a list
+            y_q_classify_list.append(y_q_array)
+            # get another containor dictionary
+            y_q_classify_dict[col] = self.manual_calssify(self.y_q_label_df.iloc[:, idx])
+
+        y_a_classify_list = []
+        y_a_classify_dict = {}
+        for idx, col in enumerate(self.a_feature_col):
+            # for each column, we transfrom them into one-hot calssification columns
+            y_a_array = self.manual_calssify(self.y_a_label_df.iloc[:, idx])
+            # store them into a list
+            y_a_classify_list.append(y_a_array)
+            # get another containor dictionary
+            y_a_classify_dict[col] = self.manual_calssify(self.y_a_label_df.iloc[:, idx])
+
+        return y_q_classify_list, y_q_classify_dict, y_a_classify_list, y_a_classify_dict
+
+
+
 
 
 

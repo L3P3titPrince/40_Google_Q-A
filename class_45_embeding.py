@@ -100,6 +100,7 @@ class MultiEmbedding(HyperParameters):
         print("*" * 50, "Start Random embedding process", "*" * 50)
         start_time = time()
 
+        MAX_SEQ_LEN = None
         # global MAX_SEQ_LEN
         if part == 'q':
             MAX_SEQ_LEN = self.MAX_Q_SEQ_LEN

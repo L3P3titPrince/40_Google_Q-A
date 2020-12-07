@@ -5,10 +5,11 @@ from scipy import stats
 import matplotlib.pyplot as plt
 # draw picture
 import seaborn as sns
+# use hyperparameters
+from class_31_hyperparameters import HyperParameters
 
 
-
-class EdaData(object):
+class EdaData(HyperParameters):
     """
     explorer this data structure
     The parameters need to be decided by eda:
@@ -19,8 +20,8 @@ class EdaData(object):
         """
         """
         # using distribution to decide this parameters
-        self.MAX_SEQ_LENGTH = 400
-
+        # self.MAX_SEQ_LENGTH = 400
+        HyperParameters.__init__(self)
     # def q_distribution_plot():
     #     # from the plot we can see
     #     plt.scatter(y_answer_df.index, y_answer_df.iloc[:, 0])

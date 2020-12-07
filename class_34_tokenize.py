@@ -6,8 +6,6 @@ import numpy as np
 import re
 # using copy to duplicate
 import copy
-# recording each step runing time
-import time
 # corpus will be string format
 import string
 # the easiest way to get text is using bs4 to get only text
@@ -80,7 +78,7 @@ class TokenizeData(HyperParameters):
         # **************new tokenize process******************
         # due to bad performance, i remain all sentence and all word in this small dataset
         # MAX_WORD = 72070
-        # start a new standard processs from begining
+        # start a new standard processs from begining, we use hyperparameter self.MAX_WORD not local MAX_WORD
         tokenizer_new = Tokenizer(num_words=self.MAX_WORD, split=' ', char_level=False, oov_token="<OOV>")
         # fit on combination corpus(question+answer). We can't just use one component to build tokenizer
         tokenizer_new.fit_on_texts(corpus_sum)
@@ -90,7 +88,7 @@ class TokenizeData(HyperParameters):
         question_seq = tokenizer_new.texts_to_sequences(question_cleaned_df['cleaned'])
         # get sequence of answer
         answer_seq = tokenizer_new.texts_to_sequences(answer_cleaned_df['cleaned'])
-        # get padded
+        # get padded,
         self.question_padded = pad_sequences(question_seq, padding='post', maxlen=self.MAX_Q_SEQ_LEN, truncating='post')
         # using padded
         self.answer_padded = pad_sequences(answer_seq, padding='post', maxlen=self.MAX_A_SEQ_LEN, truncating='post')
