@@ -15,7 +15,7 @@ class RNNModel(HyperParameters):
         """
         HyperParameters.__init__(self)
 
-    def simple_lstm(self, word_index, pretrain_matrix):
+    def lstm(self, word_index, pretrain_matrix, trainable = False):
         """
 
         :return:
@@ -46,7 +46,7 @@ class RNNModel(HyperParameters):
                                       output_dim=self.EMBEDDING_DIM,
                                       weights=[pretrain_matrix],
                                       input_length=MAX_SEQ_LEN,
-                                      trainable=False,
+                                      trainable=trainable,
                                       name="embedding_layer_2"
                                       )(input_layer_1)
         # then we use random initial embedding layer

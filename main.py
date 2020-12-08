@@ -41,7 +41,7 @@ def main():
     # input q_train_cleaned_dataframe and output still dataframe with new colunm[padded]
     # question_train part_padded  = (6078, 400)
     (q_train_padded, q_train_cleaned_df, a_train_padded, word_index,
-     q_index_word) = token_class.tokenize_plot(q_train_cleaned_df, a_train_cleaned_df)
+     q_index_word) = token_class.tokenize_data(q_train_cleaned_df, a_train_cleaned_df)
 
 
     # ********Using manuually categorical*************
@@ -86,7 +86,7 @@ def main():
     compile_class = SplitAndCompile()
     save_class = SaveModelHistory()
     #***************Random Embedding Normal Neural Network****************
-    # nn_model = model_class.nn_model(word_index, part = 'q')
+    # nn_model = model_class.nn_model(word_index)
     #     history, model_2 = compile_fit(nn_model(word_index), X_q_train, X_q_val, y_q_train, y_q_val, loss_fun = 'mse', epoch_num=1)
     # history, model = compile_class.compile_fit(nn_model,
     #                                  X_q_train, X_q_val, y_q_train, y_q_val, loss_fun='categorical_crossentropy',
@@ -115,15 +115,15 @@ def main():
     #                                            y_q_classify_list, y_q_classify_dict,
     #                                            y_a_classify_list, y_a_classify_dict,
     #                                            epoch_num=3)
-    # history_classify_df = save_class.write_csv(history, model, str_input='Question_Glove_NormalCNN_10')
+    # history_classify_df = save_class.write_csv(history, model)
 
     rnn_class = RNNModel()
-    lstm_model_1 = rnn_class.lstm(word_index, pretrain_matrix=embedding_matrix)
+    lstm_model_1 = rnn_class.lstm(word_index, pretrain_matrix=embedding_matrix, trainable=True)
     history, model = compile_class.compile_fit(lstm_model_1, q_train_padded, a_train_padded, y_q_label_df, y_a_label_df,
                                                y_q_classify_list, y_q_classify_dict,
                                                y_a_classify_list, y_a_classify_dict,
                                                epoch_num=5)
-    history_classify_df = save_class.write_csv(history, model, str_input='Question_Glove_LSTM_5')
+    history_classify_df = save_class.write_csv(history, model)
 
     #************************test part*****************************
     # 1.tokenize

@@ -50,13 +50,22 @@ class TokenizeData(HyperParameters):
     #     self.MAX_Q_SEQ_LEN = 400
     #     self.MAX_A_SEQ_LEN = 1000
 
-    def tokenize_plot(self, question_cleaned_df, answer_cleaned_df):
+    def tokenize_data(self, question_cleaned_df, answer_cleaned_df):
         """
         decide how many words should be left for tokenzie() function
 
         Argus:
         -----
-        question_cleaned_df
+        question_cleaned_df:DataFrame
+            coming from clean_data() function and have a ['cleaned'] column
+        answer_cleaned_df:DataFrame
+
+
+        Return:
+        ------
+        tokenize:function_fit
+            Test dataset need use tokenize
+
         """
         # do not set num_words at first time and to see how many unique words we have
         tokenizer_model = Tokenizer(split=' ', char_level=False, oov_token="<OOV>")

@@ -1,12 +1,3 @@
-# 1. In tf official document, MAX_WORD should not more than 999, but that way can not
-# represent enough words to transfomr the sentence meaning
-
-# 2. how to change self.MAX_Q_SEN_LEN from other class and restore or affect original class hyperparameter
-# for example, we want to change OUTPUT_UNIT in class_35_label, in the meantime, class_62_cnn can receive this change
-# Is there any way Child class can affect Parent class
-# self.preprocess.max_features https://github.com/bwallace/CNN-for-text-classification/blob/master/CNN_text.py
-
-# 3.hyparameter choose we can check the paper https://arxiv.org/abs/1510.03820
 
 """
 1.using question_user_page as benchmark, split quetsion_title or question_body into train_test, we believe different website have different type questions, so we can make evaluate and predict model
@@ -34,12 +25,29 @@ The list of 30 target labels are the same as the column names in the sample_subm
 
 12.evalution part try to use BLEU score
 
-13. After pre-trian, continue training 
+13. After pre-trian, continue training
+
+
+14. tokenizer vector minoters result + TSNE, visco liuchengtu
+
+15.use confusion matrix with number and correct result for visulization
 
 
 """
 
 
+
+https://www.kaggle.com/varunsaproo/google-q-a-using-lstm
+class PredictCallback(tf.keras.callbacks.Callback):
+  def __init__(self, data, labels):
+    self.data = data
+    self.labels = labels
+  def on_epoch_end(self, epoch, logs = {}):
+    predictions = self.model.predict(self.data)
+    print('\nValidation Score - ' + str(SpearmanCorrCoeff(self.labels, predictions)))
+
+ model.fit(train_dataset, epochs = 7, steps_per_epoch = train_idx.shape[0]//BATCH_SIZE,
+            callbacks=[PredictCallback(valid_dataset, final_outputs[valid_idx]), lr_sched, EWA()])
 
 
 
@@ -120,3 +128,114 @@ class CompileFit(object):
         cost_time = round((time() - start_time), 4)
         print("*" * 40, "End {} with {} seconds".format(model_input._name, cost_time), "*" * 40, end='\n\n')
         return history, model
+
+
+loss, mae, mse = model_2.evaluate(X_val, y_val, verbose=1)
+
+# print("Testing set Mean Abs Error: {:5.2f}".format(mae))
+
+
+# test_2 = model_2.predict(X_val)
+
+# len(test_2[:,0])
+
+# len(y_val.iloc[:,0])
+
+# type(list(y_val.iloc[:,0]))
+
+# len(test_predictions[:,1])
+
+# y_val.head(5)
+
+# test_predictions[:,0][0:10]
+
+# y_val.iloc[:,1].values.flatten()
+
+# test_predictions
+
+# COL_NUM = 1
+
+# x_axis = np.array(y_val.iloc[:,COL_NUM])
+# x_axis
+
+# plt.scatter(x=x_axis, y = test_predictions[:,COL_NUM])
+# plt.show
+
+# # from the plot we can see
+# plt.scatter(y_answer_df.index, y_answer_df.iloc[:,3])
+# plt.
+# plt.show()
+
+# test_predictions[:,1][0:10]
+
+# y_val.iloc[:,1].values.flatten()[0:10]
+
+# X_answer_df
+
+# y_val
+
+
+# y_a_val.head(2)
+
+# test_predictions = model_3.predict(X_a_val)
+# test_predictions
+
+# # LIST_INFO = [1,3,4, 5,7]
+# test_predictions = model_3.predict(X_a_val)
+
+# plt.scatter(x = y_a_val, y = test_predictions)
+# plt.xlabel('True Values')
+# plt.ylabel('Predictions')
+# plt.axis('equal')
+# plt.axis('square')
+# plt.xlim([0,plt.xlim()[1]])
+# plt.ylim([0,plt.ylim()[1]])
+# _ = plt.plot([-100, 100], [-100, 100])
+
+# def get_scores(y_true, y_pred):
+#     """
+#     Argus:
+#     -----
+#     y_true:np.ndarray
+#     y_true:np.ndarray
+#     """
+#     # if they have same size, nothing happen,
+#     assert y_true.shape == y_pred.shape
+# #     assert y_true.shape[1] == num_targets
+#     # create empty dictionary
+#     scores = {}
+#     for target_name, i in
+
+
+# scores_2 = stats.spearmanr(y_a_val, test_predictions)
+# scores_2
+
+# get_scores(y_a_val, test_predictions)
+
+
+# # LIST_INFO = [1,3,4, 5,7]
+# test_predictions = model_3.predict(X_a_val)
+
+# plt.scatter(x = y_val.iloc[:,1].values.flatten(), y = test_predictions[:,1].flatten()[LIST_INFO])
+# plt.xlabel('True Values')
+# plt.ylabel('Predictions')
+# plt.axis('equal')
+# plt.axis('square')
+# plt.xlim([0,plt.xlim()[1]])
+# plt.ylim([0,plt.ylim()[1]])
+# _ = plt.plot([-100, 100], [-100, 100])
+
+
+# error = test_predictions[:,2].flatten() - y_val.iloc[:,2].values.flatten()
+# plt.hist(error, bins = 25)
+# plt.xlabel("Prediction Error [MPG]")
+# _ = plt.ylabel("Count")
+
+
+# X_train
+
+# y_label_df.loc[:,0]
+
+
+DNN -> CNN -> n-gram_CNN -> LSTM -> BERT
+random embedding -> pre-triin embeding -> pre-train embedding

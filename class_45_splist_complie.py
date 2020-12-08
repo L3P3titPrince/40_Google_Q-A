@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras import optimizers
 # need use this to identify loss function
 from tensorflow.keras import losses
+# for numerical evaluation, we use lots of dimension to evaluate
+from tensorflow.keras import metrics
 # need hyperparameters
 from class_31_hyperparameters import HyperParameters
 
@@ -60,6 +62,18 @@ class SplitAndCompile(HyperParameters):
         # loss_fun = 'MSE' #MeanSquaredError
         # loss_fun = '
 
+        METRICS = [
+              metrics.TruePositives(name='tp'),
+              metrics.FalsePositives(name='fp'),
+              metrics.TrueNegatives(name='tn'),
+              metrics.FalseNegatives(name='fn'),
+              metrics.CategoricalAccuracy(name='accuracy'),
+              metrics.Precision(name='precision'),
+              metrics.Recall(name='recall'),
+              metrics.AUC(name='auc'),
+              # F1Score(num_classes = int(y_train.shape[1]), name='F1')
+        ]
+
         loss_fun = None
         metrics_fun = None
         # becase large data input, we want to process automaticaly. So set this arugs to choose
@@ -77,7 +91,7 @@ class SplitAndCompile(HyperParameters):
                 print("Start classify output")
                 X_train, X_val, y_train, y_val = self.split_data(q_train_padded, y_q_classify_list[0], test_size=0.2)
                 loss_fun = losses.CategoricalCrossentropy()
-                metrics_fun = ['accuracy']
+                metrics_fun = METRICS
             else:
                 print("UNKNOW self.TYPE")
 
@@ -93,7 +107,7 @@ class SplitAndCompile(HyperParameters):
                 print("Start classify output")
                 X_train, X_val, y_train, y_val = self.split_data(a_train_padded, y_a_classify_list[0], test_size=0.2)
                 loss_fun = losses.CategoricalCrossentropy()
-                metrics_fun = ['accuracy']
+                metrics_fun = METRICS
             else:
                 print("UNKNOW self.TYPE")
 

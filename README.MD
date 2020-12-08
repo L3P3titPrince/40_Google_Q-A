@@ -32,14 +32,15 @@ Every node is a individual class and main() will import them by file with inside
     <li><a href="#5.Classify">Classify</a></li>
     <li><a href="#6.Models">Models</a>
     <ul>
-        <li><a href="#8.1 NN">8.3 NN</a></li>
-        <li><a href="#8.3 LSTM">8.3 LSTM</a></li>
-        <li><a href="#8.4 BERT">8.4 BERT</a></li>
-        <li><a href="#8.5 Seq2Seq">8.5 Seq2Seq</a></li>
+        <li><a href="#6.1 NN">6.1 NN</a></li>
+        <li><a href="#6.2 CNN">6.2 CNN</a></li>
+        <li><a href="#6.3 RNN">6.3 LSTM</a></li>
+        <li><a href="#6.4 BERT">6.4 BERT</a></li>
+        <li><a href="#6.5 Seq2Seq">6.5 Seq2Seq</a></li>
     </ul>
     </li>
-    <li><a href="#7.Main Function">Main Function</a></li>
-    <li><a href="#8.Analysis">Analysis</a></li>
+    <li><a href="#7.Analysis">Analysis</a></li>
+    <li><a href="#8.Main Function">Main Function</a></li>
     <li><a href="#10.Test Code">Unused Code</a></li>
 </ol>
 

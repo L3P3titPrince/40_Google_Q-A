@@ -39,17 +39,20 @@ class HyperParameters(object):
         # the target y_q_label and y_a_label_df will be 6 column and 3 columns numreical result
         # then each modle will change its output layer to 6 or 3 Dense unit and transform activation
         # Last step, complie part will switch to MSE as loss function and ['mae', 'mse'] as metrics
-        # self.TYPE = 'num'
+        self.TYPE = 'num'
         # First class SplitData will use labeled data y_q_array_0 / y_q_array_label
         # the classify label will be (# of example, 10) for each column features
         # PRECAUTION, each column feature have its own label,
         # i.e., in question part, we need run six times, because we have six different columns
         # then each model will change its output layer to 10 unit softmax for classification
         # Last stop, compile fun will switch to categorical-crossentorya and ['accuracy'] as metrix
-        self.TYPE = 'classify'
+        # self.TYPE = 'classify'
 
 
         # ADD data process part hypereparameters, different part use differnt process arguments
         self.PART = 'q'
         # self.PART = 'a'
 
+
+        # this parameter is used to name model_save file, plot picture and history save file name
+        self.NAME_STR = '13_q_glove_n-gram_cnn_10'
