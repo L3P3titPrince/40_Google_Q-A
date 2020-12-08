@@ -1,0 +1,2 @@
+,loss,mse,mae,val_loss,val_mse,val_mae,epoch,model_features,accuracy,val_accuracy
+0,0.13719932214360214,0.13719932734966278,0.27425989508628845,0.05520602423501642,0.055206023156642914,0.17819121479988098,0,LSTM_Model_15_q_num_glove_n-gram_lstm_3,,

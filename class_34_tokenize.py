@@ -64,7 +64,7 @@ class TokenizeData(HyperParameters):
         Return:
         ------
         tokenize:function_fit
-            Test dataset need use tokenize
+            Test dataset need use tokenize to fit its
 
         """
         # do not set num_words at first time and to see how many unique words we have

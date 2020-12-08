@@ -26,22 +26,27 @@ Every node is a individual class and main() will import them by file with inside
         <li><del><a href="#Embedding">4.2 Embedding</a></del></li>
         <li><a href="#Glove Vector">4.3 Glove Vector</a></li>
         <li><a href="#BERT Vector">4.4 BERT Vector</a></li> 
-        <li><a href="#Split Data">4.5 Split Data</a></li> 
+        <li><a href="#Split and Compile">4.5 Split and Compile</a></li> 
     </ul>
     </li>
     <li><a href="#5.Classify">Classify</a></li>
     <li><a href="#6.Models">Models</a>
     <ul>
-        <li><a href="#6.1 NN">6.1 NN</a></li>
+        <li><a href="#6.1 DNN">6.1 DNN</a></li>
         <li><a href="#6.2 CNN">6.2 CNN</a></li>
-        <li><a href="#6.3 RNN">6.3 LSTM</a></li>
+        <li><a href="#6.3 RNN">6.3 RNN</a></li>
         <li><a href="#6.4 BERT">6.4 BERT</a></li>
         <li><a href="#6.5 Seq2Seq">6.5 Seq2Seq</a></li>
+        <li><a href="#6.9 Save">6.9 Save</a></li>
     </ul>
     </li>
-    <li><a href="#7.Analysis">Analysis</a></li>
+    <li><a href="#7.Analysis and Plot">Analysis and Plot</a></li>
+    <ul>
+        <li><a href="#7.1 Analysis">7.1 Analysis</a></li>
+        <li><a href="7.2 Spearmanr">7.2 Spearmanr</a></li>
+    </ul>
     <li><a href="#8.Main Function">Main Function</a></li>
-    <li><a href="#10.Test Code">Unused Code</a></li>
+    <li><a href="#9.Test Code">Test Code</a></li>
 </ol>
 
 

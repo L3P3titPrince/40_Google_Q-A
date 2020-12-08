@@ -7,9 +7,12 @@ from tensorflow.keras import optimizers
 from tensorflow.keras import losses
 # for numerical evaluation, we use lots of dimension to evaluate
 from tensorflow.keras import metrics
+
+
 # need hyperparameters
 from class_31_hyperparameters import HyperParameters
-
+# call custom spearcallback
+from class_72_spearmanr import PredictCallback
 
 
 class SplitAndCompile(HyperParameters):
@@ -116,8 +119,10 @@ class SplitAndCompile(HyperParameters):
         model_input.compile(loss=loss_fun, optimizer=opt_adam, metrics=metrics_fun)
         # batch_size is subjected to my GPU and GPU memory, after testing, 32 is reasonable value size.
         # If vector bigger, this value should dercrease
+
         history = model_input.fit(X_train, y_train, validation_data=(X_val, y_val),
-                                  epochs=epoch_num, batch_size=32, verbose=1)
+                                  epochs=epoch_num, batch_size=32, verbose=1,
+                                  callbacks = [PredictCallback(X_val, y_val, model_input)])
         # dic = ['loss', 'accuracy', 'val_loss','val_accuracy']
         history_dict = [x for x in history.history]
         # model_input.predict(train_features[:10])

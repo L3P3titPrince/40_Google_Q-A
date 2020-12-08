@@ -55,4 +55,4 @@ class HyperParameters(object):
 
 
         # this parameter is used to name model_save file, plot picture and history save file name
-        self.NAME_STR = '13_q_glove_n-gram_cnn_10'
+        self.NAME_STR = '15_q_num_glove_n-gram_lstm_3'

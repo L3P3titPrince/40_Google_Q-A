@@ -1,7 +1,8 @@
 import pandas as pd
+import numpy as np
 # plot image
 import matplotlib.pyplot as plt
-# use spearmen correcticon to evaluate how good our model
+# use spearman correcticon to evaluate how good our model
 from scipy.stats import spearmanr
 
 from class_31_hyperparameters import HyperParameters
@@ -12,6 +13,7 @@ class AnalysisAndPlot(HyperParameters):
     """
     def __init__(self, history):
         HyperParameters.__init__(self)
+        # self.shape = None
         self.history = history
 
 
@@ -82,11 +84,32 @@ class AnalysisAndPlot(HyperParameters):
 
 
 
-    def SpearmanCorrCoeff(A, B):
+    def SpearmanCorrCoeff(y_true, y_pred):
+        """
+        We use spearmanr to calculate result.
+        For now, we only use validation to get result
+
+        Argus:
+        -----
+        y_true:DataFrame
+            In here, most of time y_true will be y_q_label_df / y_a_label_df.
+            In the future, we need use test data inhere to evaluate result
+        y_pred:numpy.array
+            This augums come from model prediction, typicall is model.predict(q_train_padded))
+
+
+        Return:
+        ------
+            spearman correlated result is an average result. We need caculate each column and
+            then get the mean for this
+        """
+        # initial score
         overall_score = 0
-        for index in range(A.shape[1]):
-            overall_score += spearmanr(A.iloc[:, index], B[:, index]).correlation
-        return np.round(overall_score / A.shape[1], 3)
+        # iterate for each column
+        for col in range(y_true.shape[1]):
+            overall_score += spearmanr(y_true.iloc[:, col], y_pred[:, col]).correlation
+        return np.round(overall_score / y_true.shape[1], 3)
+
 
     def spearmanr_score(model, q_train_padded, y_q_label_df):
         """
@@ -98,7 +121,7 @@ class AnalysisAndPlot(HyperParameters):
         y_pred = model.predict(q_train_padded)
         #     print(y_true.shape, y_pred.shape)
         assert y_true.shape == y_pred.shape
-        print('\nValidation Score - ' + str(SpearmanCorrCoeff(y_q_label_df, model.predict(q_train_padded))))
+        print('\nValidation Score - ' + str(self.SpearmanCorrCoeff(y_q_label_df, model.predict(q_train_padded))))
     #     scores_2 = stats.spearmanr(y_a_val, test_predictions)
 
 

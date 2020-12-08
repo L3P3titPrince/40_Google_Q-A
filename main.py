@@ -11,6 +11,8 @@ from class_61_neuralnetwork import BuildModels
 from class_62_cnn import CNNModel
 from class_63_rnn import RNNModel
 from class_69_save import SaveModelHistory
+from class_71_analysis import AnalysisAndPlot
+from class_72_spearmanr import PredictCallback
 
 def main():
     """
@@ -85,6 +87,7 @@ def main():
     model_class = BuildModels()
     compile_class = SplitAndCompile()
     save_class = SaveModelHistory()
+    # predict_class = PredictCallback()
     #***************Random Embedding Normal Neural Network****************
     # nn_model = model_class.nn_model(word_index)
     #     history, model_2 = compile_fit(nn_model(word_index), X_q_train, X_q_val, y_q_train, y_q_val, loss_fun = 'mse', epoch_num=1)
@@ -114,11 +117,11 @@ def main():
     # history, model = compile_class.compile_fit(cnn_model_2, q_train_padded, a_train_padded, y_q_label_df, y_a_label_df,
     #                                            y_q_classify_list, y_q_classify_dict,
     #                                            y_a_classify_list, y_a_classify_dict,
-    #                                            epoch_num=3)
+    #                                            epoch_num=30)
     # history_classify_df = save_class.write_csv(history, model)
 
     rnn_class = RNNModel()
-    lstm_model_1 = rnn_class.lstm(word_index, pretrain_matrix=embedding_matrix, trainable=True)
+    lstm_model_1 = rnn_class.lstm(word_index, pretrain_matrix=embedding_matrix)
     history, model = compile_class.compile_fit(lstm_model_1, q_train_padded, a_train_padded, y_q_label_df, y_a_label_df,
                                                y_q_classify_list, y_q_classify_dict,
                                                y_a_classify_list, y_a_classify_dict,
