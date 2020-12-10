@@ -66,42 +66,46 @@ def main():
     embedding_matrix, embedding_index = glove_class.glove_vect(word_index)
     embed_class = MultiEmbedding()
     #first transform q_train_padded
-    q_glove_output_array, q_glove_embedding_layer= embed_class.glove_embedding(word_index,
-                                                                               q_train_padded,
-                                                                               embedding_matrix,
-                                                                               part = 'q')
-    a_glove_output_array, a_glove_embedding_layer= embed_class.glove_embedding(word_index,
-                                                                               a_train_padded,
-                                                                               embedding_matrix,
-                                                                               part = 'a')
-    q_random_output, q_random_embedding_layer = embed_class.random_embedding(word_index,
-                                                                             q_train_padded,
-                                                                              part = 'q')
-    a_random_output, a_random_embedding_layer = embed_class.random_embedding(word_index,
-                                                                             a_train_padded,
-                                                                             part = 'a')
-
+    # q_glove_output_array, q_glove_embedding_layer= embed_class.glove_embedding(word_index,
+    #                                                                            q_train_padded,
+    #                                                                            embedding_matrix,
+    #                                                                            part = 'q')
+    # a_glove_output_array, a_glove_embedding_layer= embed_class.glove_embedding(word_index,
+    #                                                                            a_train_padded,
+    #                                                                            embedding_matrix,
+    #                                                                            part = 'a')
+    # q_random_output, q_random_embedding_layer = embed_class.random_embedding(word_index,
+    #                                                                          q_train_padded,
+    #                                                                           part = 'q')
+    # a_random_output, a_random_embedding_layer = embed_class.random_embedding(word_index,
+    #                                                                          a_train_padded,
+    #                                                                          part = 'a')
+    #
 
     #******************Models*******************************
 
     model_class = BuildModels()
     compile_class = SplitAndCompile()
     save_class = SaveModelHistory()
+    para_class = HyperParameters()
     # predict_class = PredictCallback()
     #***************Random Embedding Normal Neural Network****************
-    # nn_model = model_class.nn_model(word_index)
-    #     history, model_2 = compile_fit(nn_model(word_index), X_q_train, X_q_val, y_q_train, y_q_val, loss_fun = 'mse', epoch_num=1)
-    # history, model = compile_class.compile_fit(nn_model,
-    #                                  X_q_train, X_q_val, y_q_train, y_q_val, loss_fun='categorical_crossentropy',
-    #                                  epoch_num=3)
+    nn_model = model_class.nn_model(word_index, pretrain_matrix=embedding_matrix)
+    history, model = compile_class.compile_fit(nn_model,
+                                               q_train_padded, a_train_padded, y_q_label_df, y_a_label_df,
+                                               y_q_classify_list, y_q_classify_dict,
+                                               y_a_classify_list, y_a_classify_dict,
+                                               epoch_num=para_class.EPOCH)
+    history_classify_df = save_class.write_csv(history, model)
 
     # # ***************Pretrain Glove Normal Neural Network****************(each model should have its own model part)
-    # pretrain_nn = model_class.nn_model(word_index, part='q', type='classify', pretrain_matrix=embedding_matrix)
+    # pretrain_nn = model_class.nn_model(word_index, pretrain_matrix=embedding_matrix)
     # history, model = compile_class.compile_fit(pretrain_nn,
-    #                                                X_q_train, X_q_val, y_q_train, y_q_val,
-    #                                                loss_fun='categorical_crossentropy',
-    #                                                epoch_num=3)
-    # history_classify_df = save_class.write_csv(history, model, str_input='Question_Glove_NN_20')
+    #                                            q_train_padded, a_train_padded, y_q_label_df, y_a_label_df,
+    #                                            y_q_classify_list, y_q_classify_dict,
+    #                                            y_a_classify_list, y_a_classify_dict,
+    #                                            epoch_num=3)
+    # history_classify_df = save_class.write_csv(history, model)
 
     # ***************Question Pretrain Gloave Normal CNN Classify*******************
     # cnn_class= CNNModel()
@@ -110,7 +114,7 @@ def main():
     #                                            X_q_train, X_q_val, y_q_train, y_q_val,
     #                                            loss_fun='categorical_crossentropy',
     #                                            epoch_num=10)
-    # history_classify_df = save_class.write_csv(history, model, str_input='Question_Glove_Normal_CNN_10')
+    # history_classify_df = save_class.write_csv(history, model)
 
     # cnn_class = CNNModel()
     # cnn_model_2 = cnn_class.n_gram_cnn(word_index, pretrain_matrix=embedding_matrix)
@@ -125,7 +129,7 @@ def main():
     history, model = compile_class.compile_fit(lstm_model_1, q_train_padded, a_train_padded, y_q_label_df, y_a_label_df,
                                                y_q_classify_list, y_q_classify_dict,
                                                y_a_classify_list, y_a_classify_dict,
-                                               epoch_num=5)
+                                               epoch_num=1)
     history_classify_df = save_class.write_csv(history, model)
 
     #************************test part*****************************

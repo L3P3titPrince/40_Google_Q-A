@@ -1,8 +1,13 @@
 from class_31_hyperparameters import HyperParameters
 
+from IPython.display import Image,display
 from tensorflow.keras.layers import (Embedding, Dense, Conv1D, MaxPooling1D,
                                      Dropout, Activation, Input, Flatten, Concatenate, LSTM, GlobalAveragePooling1D)
 from tensorflow.keras import Model
+# draw the structure of this model
+from tensorflow.keras.utils import model_to_dot, plot_model
+# dispaly structure and saved picture
+from IPython.display import Image,display
 
 class CNNModel(HyperParameters):
     """
@@ -58,12 +63,12 @@ class CNNModel(HyperParameters):
         # input layer is fix, but embed_layer will change according to custom arguments
         input_layer_1 = Input(shape=(MAX_SEQ_LEN,), dtype='float32')
         # if we assign embedding matrix for arguments "pretrain_matrx", then we use pretrained Embedding
-        if (pretrain_matrix is not None):
+        if self.PRETRINA_MATIRX:
             embed_layer_2 = Embedding(input_dim=len(word_index) + 1,
                                       output_dim=self.EMBEDDING_DIM,
                                       weights=[pretrain_matrix],
                                       input_length=MAX_SEQ_LEN,
-                                      trainable=False,
+                                      trainable=self.TRAIN_BOOLEAN,
                                       name="embedding_layer_2"
                                       )(input_layer_1)
         # then we use random initial embedding layer
@@ -83,6 +88,10 @@ class CNNModel(HyperParameters):
         output_layer_9 = Dense(OUTPUT_UNITS, activation=OUTPUT_ACT)(dense_layer_8)
         model = Model(inputs=input_layer_1, outputs=output_layer_9, name='Noram_CNN')
         model.summary()
+
+        # dot_img_file = '04_images/21_Normal_CNN_model.png'
+        # plot_model(model, to_file=dot_img_file, show_shapes=True)
+        # display(Image(filename='04_images/21_Normal_CNN_model.png'))
 
         return model
 
@@ -130,12 +139,12 @@ class CNNModel(HyperParameters):
             OUTPUT_ACT = 'softmax'
 
         main_input = Input(shape = (MAX_SEQ_LEN,), dtype='int32', name = 'main_input')
-        if (pretrain_matrix is not None):
+        if self.PRETRINA_MATIRX:
             embed_layer = Embedding(input_dim=len(word_index) + 1,
                                       output_dim=self.EMBEDDING_DIM,
                                       weights=[pretrain_matrix],
                                       input_length=MAX_SEQ_LEN,
-                                      trainable=False,
+                                      trainable=self.TRAIN_BOOLEAN,
                                       name="embedding_layer_pretrain"
                                       )(main_input)
             # then we use random initial embedding layer
@@ -180,5 +189,9 @@ class CNNModel(HyperParameters):
         # create model
         model = Model(inputs = main_input, outputs = output_layer_6, name = 'N_gram_CNN')
         model.summary()
+
+        # dot_img_file = '04_images/22_N_gram_CNN_model.png'
+        # plot_model(model, to_file=dot_img_file, show_shapes=True)
+        # display(Image(filename='04_images/22_N_gram_CNN_model.png'))
 
         return model

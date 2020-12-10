@@ -17,6 +17,74 @@ class AnalysisAndPlot(HyperParameters):
         self.history = history
 
 
+    def plot_history(self):
+        """
+
+        :return:
+        """
+        if self.TYPE == 'num':
+            hist = pd.DataFrame(self.history.history)
+            hist['epoch'] = self.history.epoch
+
+            plt.figure()
+            plt.xlabel('Epoch')
+            plt.ylabel('Mean Abs Error [MPG]')
+            plt.plot(hist['epoch'], hist['mae'],
+                     label='Train Error')
+            plt.plot(hist['epoch'], hist['val_mae'],
+                     label='Val Error')
+            plt.ylim([0, 0.5])
+            plt.legend()
+            plt.savefig(f'04_images/{self.NAME_STR}_mae.png', dpi=150, format='png')
+            # plt.savefig(f'/googledrive/MyDrive/04_images/{self.NAME_STR}_mae.png', dpi=150, format='png')
+
+            plt.figure()
+            plt.xlabel('Epoch')
+            plt.ylabel('Mean Square Error [$MPG^2$]')
+            plt.plot(hist['epoch'], hist['mse'],
+                     label='Train Error')
+            plt.plot(hist['epoch'], hist['val_mse'],
+                     label='Val Error')
+            plt.ylim([0, 0.2])
+            plt.legend()
+            plt.savefig(f'04_images/{self.NAME_STR}_mse.png', dpi=150, format='png')
+            # plt.savefig(f'/googledrive/MyDrive/04_images/{self.NAME_STR}_mse.png', dpi=150, format='png')
+            plt.show()
+
+        elif self.TYPE == 'classify':
+            hist = pd.DataFrame(self.history.history)
+            hist['epoch'] = self.history.epoch
+
+            # ****loss plost *******************
+            plt.figure()
+            plt.xlabel('Epoch')
+            plt.ylabel('loss')
+            plt.plot(hist['epoch'], hist['loss'],
+                     label='Train loss')
+            plt.plot(hist['epoch'], hist['val_loss'],
+                     label='Val loss')
+            plt.ylim([0, 3])
+            plt.legend()
+            plt.savefig(f'04_images/{self.NAME_STR}_loss.png', dpi=150, format='png')
+            # plt.savefig(f'/googledrive/MyDrive/04_images/{self.NAME_STR}_loss.png', dpi=150, format='png')
+
+            # ****************accuracy plot******************
+            plt.figure()
+            plt.xlabel('Epoch')
+            plt.ylabel('Accuracy')
+            plt.plot(hist['epoch'], hist['accuracy'],
+                     label='Train Accuracy')
+            plt.plot(hist['epoch'], hist['val_accuracy'],
+                     label='Val Accuracy')
+            plt.ylim([0, 1])
+            plt.legend()
+            plt.savefig(f'04_images/{self.NAME_STR}_acc.png', dpi=150, format='png')
+            # plt.savefig(f'/googledrive/MyDrive/04_images/{self.NAME_STR}_acc.png', dpi=150, format='png')
+            plt.show()
+
+
+
+
     def plot_history_classify(self):
         """
         This function is used for plot classification self.history result
@@ -36,7 +104,8 @@ class AnalysisAndPlot(HyperParameters):
                  label='Val loss')
         plt.ylim([0, 3])
         plt.legend()
-        plt.savefig('04_images/15_N-gram_CNN_Classify_20Epochs_loss.png', dpi=150, format='png')
+        plt.savefig(f'04_images/{self.NAME_STR}_loss.png', dpi=150, format='png')
+        # plt.savefig(f'/googledrive/MyDrive/04_images/{self.NAME_STR}_loss.png', dpi=150, format='png')
 
         # ****************accuracy plot******************
         plt.figure()
@@ -48,7 +117,8 @@ class AnalysisAndPlot(HyperParameters):
                  label='Val Accuracy')
         plt.ylim([0, 1])
         plt.legend()
-        plt.savefig('04_images/15_N-gram_CNN_Classify_20Epochs_acc.png', dpi=150, format='png')
+        plt.savefig(f'04_images/{self.NAME_STR}_acc.png', dpi=150, format='png')
+        # plt.savefig(f'/googledrive/MyDrive/04_images/{self.NAME_STR}_acc.png', dpi=150, format='png')
         plt.show()
         return hist
 
@@ -84,7 +154,7 @@ class AnalysisAndPlot(HyperParameters):
 
 
 
-    def SpearmanCorrCoeff(y_true, y_pred):
+    def SpearmanCorrCoeff(self, y_true, y_pred):
         """
         We use spearmanr to calculate result.
         For now, we only use validation to get result
@@ -111,7 +181,7 @@ class AnalysisAndPlot(HyperParameters):
         return np.round(overall_score / y_true.shape[1], 3)
 
 
-    def spearmanr_score(model, q_train_padded, y_q_label_df):
+    def spearmanr_score(self, model, q_train_padded, y_q_label_df):
         """
         """
         #     print(model, y_q_label_df.head(5))

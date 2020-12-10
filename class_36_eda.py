@@ -68,7 +68,7 @@ class EdaData(HyperParameters):
         plt.show()
         plt.close()
 
-    def eda_length(self, df):
+    def eda_length(self, df, col_name):
         """
         use statisc and plot to determine hyperparameters, such as MAX_SEQ_LEN, TOP_WORDS
         Arugs:
@@ -76,12 +76,15 @@ class EdaData(HyperParameters):
 
         """
         # get the 'AUTHOR' column sentence length
-        sentence_len = [len(x) for x in df[df.columns[0]]]
+        sentence_len = [len(x) for x in df[df.columns[6]]]
         sentence_len_arr = np.array(sentence_len)
         # change the type to numpy array and get 95%/90%/85%th percentile of the data value
-        print(f"95%th percentile of {df.columns[0]} sentence lenght is {np.percentile(sentence_len_arr, 95)}")
-        print(f"90%th percentile of {df.columns[0]} sentence lenght is {np.percentile(sentence_len_arr, 90)}")
-        print(f"85%th percentile of {df.columns[0]} sentence lenght is {np.percentile(sentence_len_arr, 85)}")
+        print(f"95%th percentile of {col_name} sentence lenght is {np.percentile(sentence_len_arr, 95)}")
+        print(f"90%th percentile of {col_name} sentence lenght is {np.percentile(sentence_len_arr, 90)}")
+        print(f"85%th percentile of {col_name} sentence lenght is {np.percentile(sentence_len_arr, 85)}")
+        print(f"80%th percentile of {col_name} sentence lenght is {np.percentile(sentence_len_arr, 80)}")
+        print(f"70%th percentile of {col_name} sentence lenght is {np.percentile(sentence_len_arr, 70)}")
+        print(f"50%th percentile of {col_name} sentence lenght is {np.percentile(sentence_len_arr, 50)}")
         # get sorted
         sentence_len.sort()
         plt.plot(np.arange(len(sentence_len)), sentence_len)

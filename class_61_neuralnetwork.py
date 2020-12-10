@@ -18,6 +18,11 @@ from tensorflow.keras import optimizers
 from tensorflow.keras.utils import to_categorical
 import tensorflow as tf
 
+# draw the structure of this model
+from tensorflow.keras.utils import model_to_dot, plot_model
+# dispaly structure and saved picture
+from IPython.display import Image,display
+
 # inhere hyperparameters
 from class_31_hyperparameters import HyperParameters
 
@@ -28,7 +33,7 @@ class BuildModels(HyperParameters):
         HyperParameters.__init__(self)
 
 
-    def nn_model(self, word_index, part='q', type='classify', pretrain_matrix = None):
+    def nn_model(self, word_index, pretrain_matrix = None):
         """
         Input is just padded question sequence, add Embedding layer transorfrom
         it into word vector and build up a sentence
@@ -73,7 +78,7 @@ class BuildModels(HyperParameters):
         # input layer is fix, but embed_layer will change according to custom arguments
         input_layer_1 = Input(shape=(MAX_SEQ_LEN,), dtype='float32')
         # if we assign embedding matrix for arguments "pretrain_matrx", then we use pretrained Embedding
-        if (pretrain_matrix is not None):
+        if self.PRETRINA_MATIRX:
             embed_layer_2 = Embedding(input_dim=len(word_index) + 1,
                                           output_dim=self.EMBEDDING_DIM,
                                           weights=[pretrain_matrix],
@@ -90,9 +95,14 @@ class BuildModels(HyperParameters):
                                       )(input_layer_1)
         pooling_layer_3 = GlobalAveragePooling1D()(embed_layer_2)
         dense_layer_4 = Dense(units=32, activation='relu')(pooling_layer_3)
-        output_layer_5 = Dense(units=OUTPUT_UNIT, activation=OUTPUT_ACT)(dense_layer_4)
+        output_layer_5 = Dense(units=OUTPUT_UNITS, activation=OUTPUT_ACT)(dense_layer_4)
         model = Model(inputs=input_layer_1, outputs=output_layer_5, name='nn_model')
         model.summary()
+
+        # dot_img_file = '04_images/20_Normal_NN_model.png'
+        # plot_model(model, to_file=dot_img_file, show_shapes=True)
+        # display(Image(filename='04_images/20_Normal_NN_model.png'))
+
         return model
 
 

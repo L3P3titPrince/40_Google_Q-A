@@ -24,6 +24,7 @@ class PredictCallback(Callback):
         self.X_data = X_data
         self.y_label = y_label
         self.model = model
+        self.spearmanr_list = []
 
     def SpearmanCorrCoeff(self, y_true, y_pred):
         """
@@ -52,6 +53,9 @@ class PredictCallback(Callback):
         return np.round(overall_score / y_true.shape[1], 3)
 
 
+    # def on_train_begin(self, logs={}):
+    #     self.spearmanr = []
+
     def on_epoch_end(self, epoch, logs = {}):
         """
 
@@ -60,4 +64,7 @@ class PredictCallback(Callback):
         :return:
         """
         y_pred = self.model.predict(self.X_data)
-        print('\nVal_Spearman_Score - ' + str(self.SpearmanCorrCoeff(self.y_label, y_pred)))
+        corr = self.SpearmanCorrCoeff(self.y_label, y_pred)
+        self.spearmanr_list.append(str(corr))
+        print('\nVal_Spearman_Score - ' + str(corr))
+        self.spearmanr.append(corr)

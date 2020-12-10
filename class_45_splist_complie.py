@@ -121,8 +121,9 @@ class SplitAndCompile(HyperParameters):
         # If vector bigger, this value should dercrease
 
         history = model_input.fit(X_train, y_train, validation_data=(X_val, y_val),
-                                  epochs=epoch_num, batch_size=32, verbose=1,
+                                  epochs=epoch_num, batch_size=16, verbose=1,
                                   callbacks = [PredictCallback(X_val, y_val, model_input)])
+        # spearmanr_list = PredictCallback(X_val, y_val, model_input).spearmanr_list
         # dic = ['loss', 'accuracy', 'val_loss','val_accuracy']
         history_dict = [x for x in history.history]
         # model_input.predict(train_features[:10])
